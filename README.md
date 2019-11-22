@@ -1,2 +1,4 @@
-# docker
-Docker compose file
+# Docker
+Docker compose file for projects
+
+* Elastic Search and Kibana
