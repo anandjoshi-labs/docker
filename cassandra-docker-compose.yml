@@ -1,0 +1,85 @@
+version: '3.7'
+services:
+  # three node cassandra cluster
+  node1:
+    image: cassandra:latest
+    command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 0; fi && /docker-entrypoint.sh cassandra -f'
+    networks:
+      - dc1ring
+    volumes:
+      - ./node1:/var/lib/cassandra
+      - ./cassandra-init.cql:/cassandra-init.cql
+    environment:
+      - CASSANDRA_CLUSTER_NAME=dev_cluster
+      - CASSANDRA_SEEDS=node1
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9160
+    ulimits:
+      memlock: -1
+      nproc: 32768
+      nofile: 100000
+  node2:
+    image: cassandra:latest
+    command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ]; then sleep 60; fi && /docker-entrypoint.sh cassandra -f'
+    networks:
+      - dc1ring
+    volumes:
+      - ./node2:/var/lib/cassandra
+      - ./cassandra-init.cql:/cassandra-init.cql
+    environment:
+      - CASSANDRA_CLUSTER_NAME=dev_cluster
+      - CASSANDRA_SEEDS=node1
+    depends_on:
+      - node1
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9160
+    ulimits:
+      memlock: -1
+      nproc: 32768
+      nofile: 100000
+  node3:
+    image: cassandra:latest
+    command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 120; fi && /docker-entrypoint.sh cassandra -f'
+    networks:
+      - dc1ring
+    volumes:
+      - ./node3:/var/lib/cassandra
+      - ./cassandra-init.cql:/cassandra-init.cql
+    environment:
+      - CASSANDRA_CLUSTER_NAME=dev_cluster
+      - CASSANDRA_SEEDS=node1
+    depends_on:
+      - node1
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9160
+    ports:
+      - "9042:9042"
+    ulimits:
+      memlock: -1
+      nproc: 32768
+      nofile: 100000
+
+  # A web based interface for managing your docker containers.
+  portainer:
+    image: portainer/portainer
+    networks:
+      - dc1ring
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer-data:/data
+    ports:
+      - "9000:9000"
+networks:
+    dc1ring:
