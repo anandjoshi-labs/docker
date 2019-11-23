@@ -6,9 +6,8 @@ services:
     command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 0; fi && /docker-entrypoint.sh cassandra -f'
     networks:
       - dc1ring
-    volumes:
-      - ./node1:/var/lib/cassandra
-      - ./cassandra-init.cql:/cassandra-init.cql
+    # volumes:
+    #   - ./node1:/var/lib/cassandra
     environment:
       - CASSANDRA_CLUSTER_NAME=dev_cluster
       - CASSANDRA_SEEDS=node1
@@ -27,9 +26,8 @@ services:
     command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ]; then sleep 60; fi && /docker-entrypoint.sh cassandra -f'
     networks:
       - dc1ring
-    volumes:
-      - ./node2:/var/lib/cassandra
-      - ./cassandra-init.cql:/cassandra-init.cql
+    # volumes:
+    #   - ./node2:/var/lib/cassandra
     environment:
       - CASSANDRA_CLUSTER_NAME=dev_cluster
       - CASSANDRA_SEEDS=node1
@@ -50,9 +48,8 @@ services:
     command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 120; fi && /docker-entrypoint.sh cassandra -f'
     networks:
       - dc1ring
-    volumes:
-      - ./node3:/var/lib/cassandra
-      - ./cassandra-init.cql:/cassandra-init.cql
+    # volumes:
+    #   - ./node3:/var/lib/cassandra
     environment:
       - CASSANDRA_CLUSTER_NAME=dev_cluster
       - CASSANDRA_SEEDS=node1
