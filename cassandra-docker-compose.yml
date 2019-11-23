@@ -1,6 +1,5 @@
-version: '3.7'
+version: "3.7"
 services:
-      
       # three node cassandra cluster
       node1:
             image: cassandra:latest
@@ -71,7 +70,7 @@ services:
                   memlock: -1
                   nproc: 32768
                   nofile: 100000
-      
+
       # A web based interface for managing your docker containers.
       portainer:
             image: portainer/portainer
